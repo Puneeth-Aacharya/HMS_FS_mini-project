@@ -5,7 +5,7 @@ using namespace std;
 
 class admin
 {
-	string buffer,dname,address,id,age;
+	string buffer,dname,address,did,age;
  public:
  void adddoc();
  void display_doctor();
@@ -14,39 +14,80 @@ class admin
  int dsearch1(char *);
 } a;
 
-
-void admin::adddoc()
+class patients
 {
+	string pname,pid,pproblem,paddress,page,buffer;
+	public:
+	void addpatient(); 
+	void display_p_record();
+    void print();
+} pa;
+void patients::addpatient()
+{
+	fstream fp;
+    cout << "\nEnter Patient Name\n";
+    cin >> pname;
+    cout << "\nPID\n";
+    cin >> pid;
+    cout << "\nAge\n";
+    cin >> page;
+    cout << "\nAddress\n";
+    cin >> paddress;
+	cout << "\nProblem\n";
+	cin>> pproblem;
     
-    
+    buffer=pid+"|"+pname+"|"+page+"|"+paddress+"|"+pproblem+"  $\n";
+    fp.open("patient.txt",ios::out|ios::app);
+    fp<<buffer;
+  	fp.close ();
+}
+void patients::display_p_record()
+{
+	fstream fp;
+	fp.open("patient.txt",ios::out);
+	while(!fp.eof())
+	{
+		buffer.erase();
+		getline(fp,buffer);
+     	a.dunpack();
+		if(!fp.eof()&& buffer[0]!='*')
+			pa.print();
+	}
+	fp.close();
+}
+void patients::print()
+{
+	cout<<"ID:"<<pid<<" Name:"<<pname<<" Age:"<<page<<"address:"<<paddress<<"Problem:"<<pproblem<<endl;
+}
+void admin::adddoc()
+{ 
     fstream fp;
     cout << "\nEnter Name\n";
     cin >> dname;
     cout << "\nID\n";
-    cin >> id;
+    cin >> did;
     cout << "\nAge\n";
     cin >> age;
     cout << "\nAddress\n";
     cin >> address;
     
-    buffer=id+"|"+dname+"|"+age+"|"+address+"  $\n";
+    buffer=did+"|"+dname+"|"+age+"|"+address+"  $\n";
     fp.open("doctor.txt",ios::out|ios::app);
     fp<<buffer;
   	fp.close ();
 
 }
-
 void admin::display_doctor()
 {
 	fstream fp;
-	fp.open("doctor.txt",ios::in);
+	fp.open("doctor.txt",ios::out);
 	while(!fp.eof())
 	{
 		buffer.erase();
 		getline(fp,buffer);
      	dunpack();
 		if(!fp.eof()&& buffer[0]!='*')
-			print();
+			a.print();
 	}
 	fp.close();
 
@@ -54,9 +95,9 @@ void admin::display_doctor()
 void admin::dunpack()
 {
 	int i=0;
-	id.erase();
+	did.erase();
 	while(buffer[i]!='|')
-		id+=buffer[i++];
+		did+=buffer[i++];
 		i++;
 	dname.erase();
 	while(buffer[i]!='|')
@@ -72,15 +113,14 @@ void admin::dunpack()
 }
 void admin::print()
 {
-	cout<<"ID:"<<id<<" Name:"<<dname<<" Age:"<<age<<"address:"<<address<<endl;
+	cout<<"ID:"<<did<<" Name:"<<dname<<" Age:"<<age<<"address:"<<address<<endl;
 }
-
-
-
-
-int main()
+main()
 {
 	int ch;
+    while(1){
+        int dch,nch,rch;
+    string username="admin",password="jnnce",u,p;
     cout<<"HOSPITAL MANAGEMENT SYSTEM\n";
     cout<<"Enter \n1. Admin\n2. Doctor\n3.Nurse\n4.Receptionist\n";
     cout<<"\nEnter your choice\n";
@@ -88,80 +128,81 @@ int main()
    switch(ch)
    {
    		case 1:
-   		{
-            string username="admin",password="jnnce",u,p;
-            cout<<"Enter your username\n";
-            cin>>u;
-            cout<<"Enter your password\n";
-            cin>>p;
-            if(u==username && p==password)
-            {
-                int ach;
-                cout<<"Welcome Admin";
-                cout<<"\n1. ADD Doctors\t\t2. Display doctors records\n3. Add Nurse\t\t4. Display Nurse records\n4. Add Receptionist\t5. Display Receptionist Record\n6. Add lab\t\t 7. Display Lab details\n8. add ward\t\t9. Display Ward details\n\n Enter your choice\n";
-                cin>>ach;
-                switch(ach)
+                cout<<"Enter your username\n";
+                cin>>u;
+                cout<<"Enter your password\n";
+                cin>>p;
+                if(u==username && p==password)
                 {
-                  case 1:a.adddoc();
+                     int ach;
+                    cout<<"Welcome Admin";
+                    cout<<"\n1. ADD Doctors\t\t2. Display doctors records\n3. Add Nurse\t\t4. Display Nurse records\n4. Add Receptionist\t5. Display Receptionist Record\n6. Add lab\t\t 7. Display Lab details\n8. add ward\t\t9. Display Ward details\n\n Enter your choice\n";
+                    cin>>ach;
+                    switch(ach)
+                    {
+                        case 1:a.adddoc();
+                            break;
+               	         case 2:a.display_doctor();
+                   		    break;
+            /*          case 3:addrecep();
+                            break;
+                        case 4:addlab();
+                            break;
+                        case 5:addward();
                         break;
-               	  case 2:a.display_doctor();
-                   		break;
-            /*      case 3:addrecep();
-                  break;
-                  case 4:addlab();
-                  break;
-                  case 5:addward();
-                  break;
               */
-                  defalut:cout<<"invalid choice";
+                        default:cout<<"invalid choice";
+                    }
                 }
+                break;
+        
+        case 2:cout<<"Welcome doctor\n";
+                        cout<<"1. Search Patient Record\n2. Display Patient Record\nEnter your choice \n";
+                        cin>>dch;
+                        switch(dch)
+                        {
+        //                      case 1:search_p_record();
+        //    	                        break;
+            	                case 2:pa.display_p_record();
+             	                        break;
+                        }
+                        break;
+        
+       	        case 3:
+       	                cout<<"Welcome Nurse";
+                        cout<<"1. Search Patient Record\n2. Display Patient Record\nEnter your choice \n";
+                        cin>>nch;
+                        switch(nch)
+                        {
+                             /*  case 1:search_p_record();
+                            break; */
+   		       	            case 2:pa.display_p_record();
+   		       	            break;
+   		    
+                        }
+                        break;
+    	
+                    case 4:cout<<"Welcome Receptionist";
+        	            cout<<"1. Add Patient\n2.Generate Bill\n";
+        	            cout<<"Enter your choice\n";
+        	            cin>>rch;
+        	            /*switch(rch)
+        	            {
+        		            case 1: p.addpatient();
+        		                    break;
+        	                /*	case 2:generatebill();
+        		                    break;
+        		            default:cout<<"Invalid choice";
+        
+        	            }*/
+                        if(rch==1){
+                            pa.addpatient();
+                            break;
+                      }
+                      break;
+                case 0:exit(0);
+                default: cout<<"Invalid Choice";
             }
-        }
-       	case 2:
-       	{
-            int dch;
-            cout<<"Welcome doctor";
-            cout<<"1. Search Patient Record\n2. Display Patient Record\nEnter your choice \n";
-            cin>>dch;
-            switch(dch)
-            {
-        //      case 1:search_p_record();
-        //    	break;
-        //  	case 2:display_p_record();
-        //    	break;
-            }
-        }
-       	case 3:
-       	{
-            int nch;
-            cout<<"Welcome Nurse";
-            cout<<"1. Search Patient Record\n2. Display Patient Record\nEnter your choice \n";
-            cin>>nch;
-            switch(nch)
-            {
-            /*  case 1:search_p_record();
-            	break;
-   		       	case 2:display_p_record();
-   		       	break;
-   		    */
-            }
-    	}
-        case 4:
-        {
-        	int rch;
-        	cout<<"Welcome Receptionist";
-        	cout<<"1. Add Patient\n2.Generate Bill\n";
-        	cout<<"Enter your choice\n";
-        	cin>>rch;
-        	switch(rch)
-        	{
-       /* 		case 1:addpatient();
-        		break;
-        		case 2:generatebill();
-        		break;
-        		defalut:cout<<"Invalid choice";
-        */
-        	}
-        }
+       
     }
 }
